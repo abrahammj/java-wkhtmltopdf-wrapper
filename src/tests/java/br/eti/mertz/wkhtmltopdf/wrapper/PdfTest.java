@@ -62,8 +62,9 @@ public class PdfTest {
         pdf.addToc();
         pdf.addParam(new Param("--enable-javascript"), new Param("--html-header", "file:///example.html"));
         pdf.addPage("http://www.google.com", PageType.url);
-        pdf.addParam(new PageParam("--cookie", "sessionid=1234"));
-        Assert.assertThat("command params should contain the --enable-javascript and --html-header", pdf.getCommand(), is("wkhtmltopdf toc --enable-javascript --html-header file:///example.html --cookie sessionid=1234 http://www.google.com -"));
+        pdf.addParam(new PageParam("--cookie", "sessionid 1234"));
+        pdf.addParam(new Param("--header-spacing", "5"));
+        Assert.assertThat("command params should end with pageparam ", pdf.getCommand(), endsWith("http://www.google.com --cookie sessionid 1234 -"));
     }
     
 }

@@ -8,7 +8,7 @@ package br.eti.mertz.wkhtmltopdf.wrapper.params;
 public class PageParam extends Param {
 
 	public PageParam(String key, String value) {
-		super(key, value, true);
+		super(key, value, false);
 	}
 	
 }
