@@ -1,8 +1,11 @@
 package br.eti.mertz.wkhtmltopdf.wrapper;
 
+import br.eti.mertz.wkhtmltopdf.wrapper.Pdf;
 import br.eti.mertz.wkhtmltopdf.wrapper.configurations.WrapperConfig;
 import br.eti.mertz.wkhtmltopdf.wrapper.page.PageType;
+import br.eti.mertz.wkhtmltopdf.wrapper.params.PageParam;
 import br.eti.mertz.wkhtmltopdf.wrapper.params.Param;
+
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.util.PDFTextStripper;
@@ -12,6 +15,7 @@ import org.junit.Test;
 import java.io.ByteArrayInputStream;
 
 import static org.hamcrest.core.StringContains.containsString;
+import static org.hamcrest.CoreMatchers.*;
 
 public class PdfTest {
 
@@ -50,7 +54,16 @@ public class PdfTest {
         String pdfText = pdfTextStripper.getText(new PDDocument(parser.getDocument()));
 
         Assert.assertThat("document should contain the creditorName", pdfText, containsString("Müller"));
-
-
     }
+    
+    @Test
+    public void testCommand_with_global_and_page_params() throws Exception {
+        Pdf pdf = new Pdf();
+        pdf.addToc();
+        pdf.addParam(new Param("--enable-javascript"), new Param("--html-header", "file:///example.html"));
+        pdf.addPage("http://www.google.com", PageType.url);
+        pdf.addParam(new PageParam("--cookie", "sessionid=1234"));
+        Assert.assertThat("command params should contain the --enable-javascript and --html-header", pdf.getCommand(), is("wkhtmltopdf toc --enable-javascript --html-header file:///example.html --cookie sessionid=1234 http://www.google.com -"));
+    }
+    
 }

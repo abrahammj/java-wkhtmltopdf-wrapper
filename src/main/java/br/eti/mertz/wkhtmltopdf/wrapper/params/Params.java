@@ -22,9 +22,26 @@ public class Params {
     }
 
     public List<String> getParamsAsStringList() {
-        List<String> commandLine = new ArrayList<String>();
+        return getParamsAsStringListInternal(ResultSetType.ALL);
+    }
+    
+    public List<String> getGlobalParamsAsStringList() {
+        return getParamsAsStringListInternal(ResultSetType.GLOBAL);
+    }
+    
+    public List<String> getPageParamsAsStringList() {
+        return getParamsAsStringListInternal(ResultSetType.PAGE);
+    }
+    
+    public List<String> getParamsAsStringListInternal(ResultSetType type) {
+    	List<String> commandLine = new ArrayList<String>();
 
         for (Param p : params) {
+        	
+        	if (!type.isPermitted(p)) {
+        		continue;
+        	}
+        	
             commandLine.add(p.getKey());
 
             String value = p.getValue();
@@ -45,4 +62,23 @@ public class Params {
         return sb.toString();
     }
 
+    enum ResultSetType {
+    	ALL,
+    	GLOBAL,
+    	PAGE;
+    	
+    	public boolean isPermitted(Param param) {
+    		switch(this) {
+    		case ALL:
+    			return true;
+    		case GLOBAL:
+    			return param.isGlobal();
+    		case PAGE:
+    			return !param.isGlobal();
+    		default:
+    			throw new IllegalArgumentException("Unexpected type");
+    		}
+    	}
+    }
+    
 }

@@ -5,10 +5,17 @@ public class Param {
     private String key;
 
     private String value;
+    
+    private boolean isGlobal;
 
     public Param(String key, String value) {
+        this(key, value, true);
+    }
+    
+    public Param(String key, String value, boolean isGlobal) {
         this.key = key;
         this.value = value;
+        this.isGlobal = isGlobal;
     }
 
     public Param(String key) {
@@ -29,6 +36,14 @@ public class Param {
 
     public void setValue(String value) {
         this.value = value;
+    }
+    
+    public void setGlobal(boolean isGlobal) {
+    	this.isGlobal = isGlobal;
+    }
+    
+    public boolean isGlobal() {
+    	return this.isGlobal;
     }
 
     public String toString() {

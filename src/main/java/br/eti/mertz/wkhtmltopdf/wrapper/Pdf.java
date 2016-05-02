@@ -114,7 +114,7 @@ public class Pdf implements PdfService {
         if (hasToc)
             commandLine.add("toc");
 
-        commandLine.addAll(params.getParamsAsStringList());
+        commandLine.addAll(params.getGlobalParamsAsStringList());
 
         for (Page page : pages) {
             if (page.getType().equals(PageType.htmlAsString)) {
@@ -123,6 +123,7 @@ public class Pdf implements PdfService {
                 commandLine.add(page.getSource());
             }
         }
+        commandLine.addAll(params.getPageParamsAsStringList());
         commandLine.add(STDINOUT);
         return commandLine.toArray(new String[commandLine.size()]);
     }
